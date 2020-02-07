@@ -2,21 +2,14 @@
 
 import time
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
-#this import is used for more security you can delete it and use your own user and pass instead
-import userpass
 
-options = Options()
-#options.add_argument("--headless")
 flag = False
-driver = webdriver.Firefox(firefox_options=options)
+driver = webdriver.Chrome()
 driver.get("http://pooya.khayyam.ac.ir/gateway/PuyaAuthenticate.php")
 while (not flag):
-    username = driver.find_element_by_name("UserID")
-    password = driver.find_element_by_name("DummyVar")
+    
 
-    username.send_keys(userpass.myuser)
-    password.send_keys(userpass.mypass)
+
     
 
     driver.find_element_by_xpath("//*[@type='submit']").click()
@@ -38,17 +31,12 @@ while (not flag):
 
         
         tables = driver.find_elements_by_tag_name("table")
-        for row in tables:
-            for col in row.find_elements_by_tag_name("tr"):
+        for i in range(len(course)):
+            for col in driver.find_elements_by_tag_name("tr"):
                 if len(col.find_elements_by_tag_name("td")) == 6 :
                     if col.find_elements_by_tag_name("td")[1].text == course[i] :
                         cell = col.find_element_by_id("LsnGrp[]")
                         cell.send_keys(code[i])
-                        i = i + 1
-                        if i>=len(course):
-                            break
-                    else:
-                        print("Well Sh**")
         driver.find_element_by_xpath("//*[@type='submit']").click()
         flag = True
 #driver.quit()
